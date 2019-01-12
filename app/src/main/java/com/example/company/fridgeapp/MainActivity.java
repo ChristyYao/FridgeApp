@@ -22,15 +22,18 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         initNavBar();
+
+
     }
 
     private void initNavBar() {
         AHBottomNavigation bottomNavigation = findViewById(R.id.nav_bar);
 
         // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorBottomNavigationAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorBottomNavigationDisable);
+        // Food, Shopping List, Account
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_food, R.color.colorPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_shopping, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_account, R.color.colorPrimary);
 
         // Add items
         bottomNavigation.addItem(item1);
@@ -66,21 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set current item programmatically
         bottomNavigation.setCurrentItem(1);
-
-        // Customize notification (title, background, typeface)
-        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
-
-        AHNotification notification = new AHNotification.Builder()
-                .setText("1")
-                .setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent))
-                .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent))
-                .build();
-        bottomNavigation.setNotification(notification, 1);
-
-        // Enable / disable item & set disable color
-        bottomNavigation.enableItemAtPosition(2);
-        bottomNavigation.disableItemAtPosition(2);
-        bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
 
         // Set listeners
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
