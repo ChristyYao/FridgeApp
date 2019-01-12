@@ -2,18 +2,21 @@ package com.example.company.fridgeapp;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Window;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.example.company.fridgeapp.adapter.ItemAdapter;
 
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ItemAdapter itemAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         initNavBar();
 
-
+        itemAdapter = new ItemAdapter();
+        recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(itemAdapter);
     }
 
     private void initNavBar() {

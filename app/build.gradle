@@ -34,4 +34,5 @@ dependencies {
     // Custom libraries
     implementation 'com.github.paolorotolo:appintro:v5.1.0'
     implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
+    implementation 'com.truizlop.sectionedrecyclerview:library:1.2.0'
 }
