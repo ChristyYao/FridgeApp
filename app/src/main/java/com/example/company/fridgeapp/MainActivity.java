@@ -1,11 +1,17 @@
 package com.example.company.fridgeapp;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.view.Window;
+
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,41 +19,77 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
-        introCheck();
+        initNavBar();
     }
 
-    public void introCheck() {
-        /* Uncomment this line to get the intro back */
-        PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().remove("firstStart").apply();
+    private void initNavBar() {
+        AHBottomNavigation bottomNavigation = findViewById(R.id.nav_bar);
 
-        /* Declare a new thread to do a preference check */
-        Thread thread = new Thread(() -> {
+        // Create items
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorBottomNavigationAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.app_name, R.drawable.ic_appintro_done_white, R.color.colorBottomNavigationDisable);
 
-            /* Initialize SharedPreferences */
-            SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        // Add items
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
 
-            /* Create a new boolean and preference and set it to true */
-            boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+        // Set background color
+        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
 
-            /* If the activity has never started before... */
-            if (isFirstStart) {
-                /* Launch app intro */
-                runOnUiThread(() -> startActivity(new Intent(this, IntroActivity.class)));
+        // Disable the translation inside the CoordinatorLayout
+        bottomNavigation.setBehaviorTranslationEnabled(false);
 
-                /* Make a new preferences editor */
-                SharedPreferences.Editor e = getPrefs.edit();
+        // Change colors
+        bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
+        bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
 
-                /* Edit preference to make it false because we don't want this to run again */
-                e.putBoolean("firstStart", false);
+        // Force to tint the drawable (useful for font with icon for example)
+        bottomNavigation.setForceTint(true);
 
-                /* Apply the changes */
-                e.apply();
-            }
+        // Display color under navigation bar (API 21+)
+        // Don't forget these lines in your style-v21
+        // <item name="android:windowTranslucentNavigation">true</item>
+        // <item name="android:fitsSystemWindows">true</item>
+        bottomNavigation.setTranslucentNavigationEnabled(true);
+
+        // Manage titles
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
+
+        // Use colored navigation with circle reveal effect
+        bottomNavigation.setColored(true);
+
+        // Set current item programmatically
+        bottomNavigation.setCurrentItem(1);
+
+        // Customize notification (title, background, typeface)
+        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
+        AHNotification notification = new AHNotification.Builder()
+                .setText("1")
+                .setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent))
+                .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent))
+                .build();
+        bottomNavigation.setNotification(notification, 1);
+
+        // Enable / disable item & set disable color
+        bottomNavigation.enableItemAtPosition(2);
+        bottomNavigation.disableItemAtPosition(2);
+        bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
+
+        // Set listeners
+        bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
+            // Do something cool here...
+            return true;
         });
-
-        /* Start the thread */
-        thread.start();
+        bottomNavigation.setOnNavigationPositionListener(y -> {
+            // Manage the new y position
+        });
     }
 
 }
